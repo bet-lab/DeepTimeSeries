@@ -1,25 +1,45 @@
 # DeepTimeSeries
 
-Deep learning library for time series forecasting based on PyTorch and PyTorch Lightning.
+[![Python 3.10–3.11](https://img.shields.io/badge/python-3.10%E2%80%933.11-blue.svg)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+[![DOI](https://img.shields.io/badge/DOI-10.1016%2Fj.enbuild.2023.113027-blue)](https://doi.org/10.1016/j.enbuild.2023.113027)
+
+A deep learning library for time series forecasting, built on **PyTorch** and **PyTorch Lightning**.
+
+---
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Key Features](#key-features)
+- [Installation](#installation)
+- [Quick Start](#quick-start)
+- [Supported Models](#supported-models)
+- [Project Structure](#project-structure)
+- [Core Concepts](#core-concepts)
+- [Documentation](#documentation)
+- [Citation](#citation)
+- [Contributing](#contributing)
+- [License](#license)
 
 ## Overview
 
-DeepTimeSeries is a comprehensive library designed for time series forecasting using deep learning models. It provides a logical framework for designing and implementing various deep learning architectures specifically tailored for time series data.
+DeepTimeSeries provides a logical framework for designing and implementing various deep learning architectures specifically tailored for time series forecasting.
 
-The library is built on PyTorch and PyTorch Lightning, offering both high-level APIs for beginners and flexible low-level components for intermediate to advanced users who need to customize their forecasting models.
+> **We present logical guidelines for designing various deep learning models for time series forecasting.**
+
+The library targets intermediate-level users who need to develop deep learning models for time series prediction. It solves common challenges unique to time series data—variable-length sequences, encoding/decoding windows, multi-feature handling, and probabilistic forecasting—while its high-level API allows beginners to use pre-implemented models with minimal configuration.
 
 ## Key Features
 
-- **Modular Architecture**: Clean separation between encoding, decoding, and prediction components
-- **Multiple Model Support**: Pre-implemented models including MLP, Dilated CNN, RNN variants (LSTM, GRU), and Transformer
-- **Flexible Data Handling**: Pandas DataFrame-based data processing with chunk-based extraction
-- **Data Preprocessing**: Built-in `ColumnTransformer` for feature scaling and transformation
-- **Probabilistic Forecasting**: Support for both deterministic and probabilistic predictions
-- **PyTorch Lightning Integration**: Seamless integration with Lightning for training, validation, and testing
+- **Modular Architecture** — Clean separation between encoding, decoding, and prediction components
+- **Multiple Model Support** — Pre-implemented models including MLP, Dilated CNN, RNN variants (LSTM, GRU), and Transformer
+- **Flexible Data Handling** — Pandas DataFrame-based data processing with chunk-based extraction
+- **Data Preprocessing** — Built-in `ColumnTransformer` for feature scaling and transformation
+- **Probabilistic Forecasting** — Support for both deterministic and probabilistic predictions
+- **PyTorch Lightning Integration** — Seamless training, validation, and testing workflows
 
 ## Installation
-
-The project uses `pyproject.toml` for dependency management. You can install it using:
 
 ```bash
 # Using pip
@@ -32,16 +52,21 @@ uv sync
 uv sync --all-groups
 ```
 
-### Requirements
+<details>
+<summary><strong>Requirements</strong></summary>
 
-- Python >= 3.10, < 3.12
-- PyTorch >= 2.0.0
-- PyTorch Lightning >= 2.0.0
-- NumPy >= 1.24.2
-- Pandas >= 1.5.3
-- XArray >= 2023.2.0
+| Package | Version |
+|---------|---------|
+| Python | ≥ 3.10, < 3.12 |
+| PyTorch | ≥ 2.0.0 |
+| PyTorch Lightning | ≥ 2.0.0 |
+| NumPy | ≥ 1.24.2 |
+| Pandas | ≥ 1.5.3 |
+| XArray | ≥ 2023.2.0 |
 
-See `pyproject.toml` for the complete list of dependencies.
+See [`pyproject.toml`](pyproject.toml) for the complete list of dependencies.
+
+</details>
 
 ## Quick Start
 
@@ -94,7 +119,7 @@ trainer.fit(model, train_dataloaders=dataloader, val_dataloaders=dataloader)
 ## Supported Models
 
 | Model | Target Features | Non-target Features | Deterministic | Probabilistic |
-|-------|----------------|---------------------|---------------|---------------|
+|-------|:-:|:-:|:-:|:-:|
 | MLP | ✓ | ✓ | ✓ | ✓ |
 | Dilated CNN | ✓ | ✓ | ✓ | ✓ |
 | Vanilla RNN | ✓ | ✓ | ✓ | ✓ |
@@ -106,10 +131,10 @@ trainer.fit(model, train_dataloaders=dataloader, val_dataloaders=dataloader)
 
 ```
 deep_time_series/
-├── core.py          # Core modules: ForecastingModule, Head, BaseHead, etc.
-├── chunk.py         # Chunk specification and extraction utilities
-├── dataset.py       # TimeSeriesDataset implementation
-├── transform.py     # ColumnTransformer for data preprocessing
+├── core.py          # ForecastingModule, Head, BaseHead, etc.
+├── chunk.py         # Chunk specification and extraction
+├── dataset.py       # TimeSeriesDataset
+├── transform.py     # ColumnTransformer for preprocessing
 ├── plotting.py      # Visualization utilities
 ├── layer.py         # Custom neural network layers
 ├── util.py          # Utility functions
@@ -125,49 +150,54 @@ deep_time_series/
 ### Chunk Specification
 
 The library uses a chunk-based approach for handling time series data:
-- **EncodingChunkSpec**: Defines the input window for the encoder
-- **DecodingChunkSpec**: Defines the input window for the decoder
-- **LabelChunkSpec**: Defines the target window for prediction
+
+| Chunk | Purpose |
+|-------|---------|
+| `EncodingChunkSpec` | Defines the input window for the encoder |
+| `DecodingChunkSpec` | Defines the input window for the decoder |
+| `LabelChunkSpec` | Defines the target window for prediction |
 
 ### Forecasting Module
 
 All models inherit from `ForecastingModule`, which provides:
-- Automatic training/validation/test step implementations
+- Automatic training / validation / test step implementations
 - Metric tracking and logging
 - Loss calculation with multiple heads
 - Chunk specification generation
 
 ### Data Flow
 
-1. Load data as pandas DataFrame
-2. Apply preprocessing with `ColumnTransformer`
-3. Create `TimeSeriesDataset` with chunk specifications
-4. Train model using PyTorch Lightning Trainer
-5. Use `ChunkInverter` to convert model outputs back to DataFrame format
+```
+DataFrame → ColumnTransformer → TimeSeriesDataset → Lightning Trainer → ChunkInverter → DataFrame
+```
 
 ## Documentation
 
-Full documentation is available at: https://bet-lab.github.io/DeepTimeSeries/
+Full documentation: **https://bet-lab.github.io/DeepTimeSeries/**
 
-The documentation includes:
-- User Guide: Design concepts and usage patterns
-- Tutorials: Step-by-step examples
-- API Reference: Complete API documentation
+- **User Guide** — Design concepts and usage patterns
+- **Tutorials** — Step-by-step examples
+- **API Reference** — Complete API documentation
 
-## Design Philosophy
+## Citation
 
-DeepTimeSeries is designed with the following principles:
+If you use DeepTimeSeries in your research, please cite:
 
-**We present logical guidelines for designing various deep learning models for time series forecasting**
+> Choi, W., & Lee, S. (2023). Performance evaluation of deep learning architectures for load and temperature forecasting under dataset size constraints and seasonality. *Energy and Buildings*, 288, 113027. https://doi.org/10.1016/j.enbuild.2023.113027
 
-The library targets intermediate-level users who need to develop deep learning models for time series prediction. It provides solutions to common problems that arise from the unique characteristics of time series data, such as:
-
-- Handling variable-length sequences
-- Managing encoding and decoding windows
-- Supporting both target and non-target features
-- Enabling probabilistic forecasting
-
-Additionally, the high-level API allows beginners to use pre-implemented models with minimal configuration.
+```bibtex
+@article{choi2023performance,
+  author  = {Choi, W. and Lee, S.},
+  title   = {Performance evaluation of deep learning architectures for load
+             and temperature forecasting under dataset size constraints
+             and seasonality},
+  journal = {Energy and Buildings},
+  volume  = {288},
+  pages   = {113027},
+  year    = {2023},
+  doi     = {10.1016/j.enbuild.2023.113027}
+}
+```
 
 ## Contributing
 
@@ -179,5 +209,5 @@ MIT License
 
 ## Authors
 
-- Sangwon Lee 
-- Wonjun Choi
+- [Sangwon Lee](https://github.com/swlee-bet)
+- [Wonjun Choi](https://github.com/wjchoi-bet)
