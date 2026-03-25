@@ -209,5 +209,5 @@ MIT License
 
 ## Authors
 
-- [Sangwon Lee](https://github.com/swlee-bet)
-- [Wonjun Choi](https://github.com/wjchoi-bet)
+- [Sangwon Lee](https://github.com/Sangwon91)
+- [Wonjun Choi](https://github.com/wonjun-lab)
