@@ -12,6 +12,9 @@ on:
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   ci:
     strategy:
@@ -34,6 +37,28 @@ jobs:
       - name: Build documentation
         run: |
           uv run sphinx-build -M html doc/source doc/build
+      - name: Upload built documentation
+        uses: actions/upload-artifact@v7
+        with:
+          name: documentation-html
+          path: doc/build/html
+          include-hidden-files: true
+          if-no-files-found: error
+          retention-days: 1
+
+  publish:
+    needs: ci
+    if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
+    permissions:
+      contents: write
+    runs-on: [self-hosted, ml-main]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download built documentation
+        uses: actions/download-artifact@v8
+        with:
+          name: documentation-html
+          path: doc/build/html
       - name: Publish to Github Pages
         uses: peaceiris/actions-gh-pages@v3
         with:
