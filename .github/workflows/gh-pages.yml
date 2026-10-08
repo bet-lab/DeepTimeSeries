@@ -21,7 +21,8 @@ jobs:
       fail-fast: false
       matrix:
         python-version: ["3.10"]
-    runs-on: [self-hosted, ml-main]
+    # Public PR checks use an isolated GitHub-hosted runner; trusted events keep ml-main.
+    runs-on: ${{ fromJSON(github.event_name == 'pull_request' && '["ubuntu-24.04"]' || '["self-hosted", "ml-main"]') }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-python@v4
