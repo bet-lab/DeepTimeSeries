@@ -1,7 +1,6 @@
 # DeepTimeSeries
 
 [![Python 3.10–3.11](https://img.shields.io/badge/python-3.10%E2%80%933.11-blue.svg)](https://www.python.org/)
-[![License: MIT](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 [![DOI](https://img.shields.io/badge/DOI-10.1016%2Fj.enbuild.2023.113027-blue)](https://doi.org/10.1016/j.enbuild.2023.113027)
 
 A deep learning library for time series forecasting, built on **PyTorch** and **PyTorch Lightning**.
@@ -205,7 +204,7 @@ Contributions are welcome! Please feel free to submit issues or pull requests.
 
 ## License
 
-MIT License
+The README declares MIT licensing, but this checkout does not include a `LICENSE` file containing the license text. Confirm the applicable terms with the rights holder before redistribution.
 
 ## Authors
 
