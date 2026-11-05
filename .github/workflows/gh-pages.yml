@@ -24,14 +24,14 @@ jobs:
     # Public PR checks use an isolated GitHub-hosted runner; trusted events keep ml-main.
     runs-on: ${{ fromJSON(github.event_name == 'pull_request' && '["ubuntu-24.04"]' || '["self-hosted", "ml-main"]') }}
     steps:
-      - uses: actions/checkout@v7.0.1
-      - uses: actions/setup-python@v7.0.0
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install uv
         uses: astral-sh/setup-uv@37802adc94f370d6bfd71619e3f0bf239e1f3b78 # v7.6.0
         with:
-          version: "latest"
+          version: "0.13.7"
           # Keep the previous v5 cache behavior explicit across the runtime upgrade.
           enable-cache: auto
           cache-local-path: ${{ runner.temp }}/setup-uv-cache
@@ -40,12 +40,12 @@ jobs:
             **/requirements*.txt
       - name: Install dependencies
         run: |
-          uv sync --all-groups
+          uv sync --locked --all-groups
       - name: Build documentation
         run: |
-          uv run sphinx-build -M html doc/source doc/build
+          uv run --no-sync sphinx-build -M html doc/source doc/build
       - name: Upload built documentation
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7
         with:
           name: documentation-html
           path: doc/build/html
@@ -60,14 +60,14 @@ jobs:
       contents: write
     runs-on: [self-hosted, ml-main]
     steps:
-      - uses: actions/checkout@v7.0.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Download built documentation
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8
         with:
           name: documentation-html
           path: doc/build/html
       - name: Publish to Github Pages
-        uses: peaceiris/actions-gh-pages@v4.1.0
+        uses: peaceiris/actions-gh-pages@84c30a85c19949d7eee79c4ff27748b70285e453 # v4.1.0
         with:
           publish_branch: gh-pages
           github_token: ${{ secrets.GITHUB_TOKEN }}
